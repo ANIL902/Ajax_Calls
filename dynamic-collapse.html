@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Dynamic-Collapse</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
+</head>
+<body onload="loadCheckbox()">
+
+    <div id="container"></div> 
+    
+
+    <script>
+
+        function loadCheckbox(){
+            getData();
+        }
+
+        function createCards(data){
+            var card = '';
+
+            for(var i=0; i < data.length; i++){
+                card +="<div class='card'>"+
+                            "<div class='card-header'>"+
+                                "<h2 class='mb-0'>"+
+                                    "<button onclick=toggleClick() class=btn btn-link type=button data-toggle='collapse' data-target= " + data[i].id + " aria-expanded='true' aria-controls= data[i].id>"+
+                                        data[i].name +
+                                    "</button>" +
+                                "</h2>" +
+                            "</div>"+
+                            "<div id="+ data[i].id +"  class=collapse>" +
+                                "<div class='card-body'> " +
+                                    data[i].email + " <br/> " + data[i].address.city +
+                                "</div>" +
+                            "</div>"+
+                        "</div>"
+            }
+            document.getElementById("container").innerHTML = card;
+        }
+
+        function getData(){
+            var method = "GET";
+            var url = "http://jsonplaceholder.typicode.com/users";
+            var http = new XMLHttpRequest();
+            http.open(method, url);
+            http.send();
+
+            http.onreadystatechange = function(e){
+                if(this.readyState == 4 && this.status == 200){
+                    var name = JSON.parse(this.responseText);
+                    createCards(name);
+                }
+            }
+        }
+
+        function toggleClick(){
+            var target = event.currentTarget.getAttribute('data-target');
+            var list = document.getElementById(target).classList;
+
+            var dataOne = document.getElementsByClassName('show');
+            for(var k=0; k< dataOne.length; k++){
+                dataOne[k].classList.remove('show');
+            }
+
+            if(list.contains('show')){
+                document.getElementById(target).classList.remove('show');
+            }else{
+                document.getElementById(target).classList.add('show');
+            }
+            
+            
+        }
+
+    </script>
+</body>
+</html>

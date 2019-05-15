@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Ajax Dynamic-Table-Data</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
+</head>
+<body>
+    <table class="table table-striped">
+        <thead id="thead-container"></thead>
+        <tbody id="tbody-container"></tbody>
+    </table>
+    
+    <button class="btn btn-success" onclick="loadTableData()">GetData</button>
+    <button class="btn btn-danger" onclick="clearData()">ClearData</button>
+
+    <script>
+        function clearData(){
+            document.getElementById('tbody-container').innerHTML = ' ';
+        }
+
+        function loadTableData(){
+            fetchData();
+        }
+
+        function createTemplate(data){
+            var bodyTempl = '';
+            var headTempl =  "<tr>" +
+                    "<th> Sno </th>" +
+                    "<th> Sname </th>" +
+                    "<th> Mobile </th>" +
+                    "<th> City </th>" +
+                    "</tr>";
+            document.getElementById("thead-container").innerHTML = headTempl;
+
+            for(var i=0; i < data.length; i++){
+                bodyTempl += "<tr>" +
+                "<td>" + data[i].id + "</td>" + 
+                "<td>" + data[i].name + "</td>" + 
+                "<td>" + data[i].phone + "</td>" + 
+                "<td>" + data[i].address.city + "</td>"  +
+               "</tr>"
+            }
+            document.getElementById("tbody-container").innerHTML = bodyTempl;
+        }
+
+        function fetchData(){
+            var method = "GET";
+            var url = "http://jsonplaceholder.typicode.com/users";
+            var http = new XMLHttpRequest();
+            http.open(method, url);
+            http.send();
+
+            http.onreadystatechange = function(e){
+            console.log(this.readyState);
+            console.log(this.state);
+
+                if(this.readyState == 4 && this.status == 200){
+                    createTemplate(JSON.parse(this.responseText));
+                }
+            }
+        }
+
+
+
+
+    </script>
+</body>
+</html>
